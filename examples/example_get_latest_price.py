@@ -33,12 +33,12 @@ headers = {
 
 for security in holdings:
     # print(f"Fetching data for {stock} from {url}")
-    print(f"Security object: {security}")
+    # print(f"Security object: {security}")
     response = requests.get(security.url, headers=headers)
     data = response.json()
-    last_price = data["security"]["p"]
-    timestamp = data["security"]["t"]
-    print(data)
+    # print(data)
+    last_price = data["trade"]["p"]
+    timestamp = data["trade"]["t"]
 
     print(f"Last {security.symbol} security price: ${last_price} at {timestamp}")
 
@@ -66,7 +66,10 @@ wss_client = StockDataStream(ALPACA_API_KEY, ALPACA_API_SECRET_KEY)
 async def quote_data_handler(data):
     # async handler
     # quote data will arrive here
-    print(data)
+    # print(data)
+    print(
+        f"Quote for {data.symbol}: {data.bid_price:.2f} / {data.ask_price:.2f} at {data.timestamp}")
+
 print("Subscribing to quotes for:", holdings[0].symbol)
 wss_client.subscribe_quotes(quote_data_handler, holdings[0].symbol)
 wss_client.run()
