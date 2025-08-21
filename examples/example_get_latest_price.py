@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from tools.trade_class import Trade
+from tools.security_class import Security
 # fmt: on
 
 
@@ -22,8 +22,8 @@ print("API Key:", ALPACA_API_SECRET_KEY)
 
 
 holdings = [
-    Trade("TSLA", "Tesla Inc"),
-    Trade("TSLQ", "ProShares UltraShort Tesla"),
+    Security("TSLA", "Tesla Inc"),
+    Security("TSLQ", "ProShares UltraShort Tesla"),
 ]
 
 headers = {
@@ -31,16 +31,16 @@ headers = {
     "APCA-API-SECRET-KEY": ALPACA_API_SECRET_KEY
 }
 
-for trade in holdings:
+for security in holdings:
     # print(f"Fetching data for {stock} from {url}")
-    print(f"Trade object: {trade}")
-    response = requests.get(trade.url, headers=headers)
+    print(f"Security object: {security}")
+    response = requests.get(security.url, headers=headers)
     data = response.json()
-    last_price = data["trade"]["p"]
-    timestamp = data["trade"]["t"]
+    last_price = data["security"]["p"]
+    timestamp = data["security"]["t"]
     print(data)
 
-    print(f"Last {trade.symbol} trade price: ${last_price} at {timestamp}")
+    print(f"Last {security.symbol} security price: ${last_price} at {timestamp}")
 
 
 # keys required for stock historical data client
@@ -52,10 +52,10 @@ multisymbol_request_params = StockLatestQuoteRequest(
 latest_multisymbol_quotes = client.get_stock_latest_quote(
     multisymbol_request_params)
 
-for trade in holdings:
-    # print(latest_multisymbol_quotes[trade.symbol])
+for security in holdings:
+    # print(latest_multisymbol_quotes[security.symbol])
     print(
-        f'latest bid vs ask {trade.symbol}: {latest_multisymbol_quotes[trade.symbol].bid_price} vs. {latest_multisymbol_quotes[trade.symbol].ask_price}')
+        f'latest bid vs ask {security.symbol}: {latest_multisymbol_quotes[security.symbol].bid_price} vs. {latest_multisymbol_quotes[security.symbol].ask_price}')
 
 # fmt: off
 from alpaca.data.live import StockDataStream
