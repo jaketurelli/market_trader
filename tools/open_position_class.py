@@ -3,13 +3,14 @@ from alpaca.trading.models import Position as AlpacaPosition
 
 
 class OpenPosition:
-    def __init__(self, alpaca_position: AlpacaPosition, same_day: bool = False):
+    def __init__(self, alpaca_position: AlpacaPosition, percent_gain_to_sell: float = 1.0):
         self.alpaca_position = alpaca_position
-        self.is_same_day = same_day
+        self.percent_gain_to_sell = percent_gain_to_sell
 
-    def __repr__(self):
-        return f"Open Position:\nposition=\n'{self.alpaca_position}\n'is_same_day={self.is_same_day})"
-
+    def should_sell(self):
+        if self.alpaca_position.unrealized_plpc >= self.percent_gain_to_sell:
+            return True
+        return False
 
 # if __name__ == "__main__":
 #     position = OpenPosition("AAPL", "Apple Inc.")
